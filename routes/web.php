@@ -172,7 +172,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     }
 });
 
-Route::get('/', IndexController::class)->name('index');
+//Route::get('/', IndexController::class)->name('index');
 Route::get('/cart',  [OrderController::class, 'showCart'])->name('cart');
 
 Route::middleware([
@@ -183,23 +183,25 @@ Route::middleware([
 
     Route::get('/orders', [CabinetController::class, 'orders'])->name('orders');
 
-    Route::get('/tickets', function () {
-        return view('pages.cabinet.tickets.index');
-    })->name('tickets');
+    Route::get('/personal', function () {
+        return view('pages.cabinet.personal.index');
+    })->name('personal.index');
 
-    Route::get('/tickets/create', function () {
-        return view('pages.cabinet.tickets.create');
-    })->name('tickets.create');
+    Route::get('/support', function () {
+        return view('pages.cabinet.support.index');
+    })->name('support');
 
-    Route::get('/faq/{faq?}', function () {
-        return view('pages.cabinet.faq');
-    })->name('faq');
+    Route::get('/support/item', function () {
+        return view('pages.cabinet.support.item');
+    })->name('support.item');
+
+    Route::get('/support/create', function () {
+        return view('pages.cabinet.support.create');
+    })->name('support.create');
+
 
 });
 
-Route::get('/contact-us', function () {
-    return view('pages.contact_us');
-})->name('contact-us');
 
 Route::get('/page/{page}', [PageController::class, 'page'])->name('pages');
 
