@@ -4,17 +4,19 @@ namespace App\Http\Livewire\Auth;
 
 use App\Http\Controllers\Users\AuthController;
 use App\Services\Client\Dto\LoginUserRequestClientDto;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class Login extends Component
 {
 
-    public $email;
+    public $login;
     public $password;
     public $remember;
 
     protected $rules = [
-        'email'    => 'required|email:strict',
+        'login'    => 'required|min:3',
         'password' => 'required',
         'remember' => 'sometimes|nullable',
     ];
@@ -26,16 +28,26 @@ class Login extends Component
 
     public function auth()
     {
+
         $this->validate();
 
-        $dto = (new LoginUserRequestClientDto([
-            'email'    => $this->email,
-            'password' => $this->password,
-            'remember' => $this->remember,
-            'ip'       => request()->server('REMOTE_ADDR'),
-        ]));
+        try {
+            $dto = (new LoginUserRequestClientDto([
+                'login'    => $this->login,
+                'password' => $this->password,
+                'remember' => $this->remember,
+                'ip'       => request()->server('REMOTE_ADDR'),
+            ]));
+        } catch (UnknownProperties $e) {
+            return false;
+        }
 
         app(AuthController::class)->store($dto);
+
+        if (Auth::user() === null) {
+            $this->addError('login', __('auth.failed'));
+            return false;
+        }
 
         $this->redirect(route('index'));
 

@@ -15,7 +15,7 @@ class AuthController
 
     public function store(LoginUserRequestClientDto $dto)
     {
-        return (new UsersService())->auth($dto);
+        (new UsersService())->auth($dto);
     }
 
 }

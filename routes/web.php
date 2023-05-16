@@ -47,7 +47,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     $verificationLimiter = config('fortify.limiters.verification', '6,1');
 
 
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
     // Password Reset...

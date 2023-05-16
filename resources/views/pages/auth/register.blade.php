@@ -39,84 +39,12 @@
                                 <hr>
                                 <span class="line-text">или</span>
                             </div>
-                            <form method="post" action="">
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-user-alt"></i></span>
-                                        <input type="text" class="form-control" placeholder="Логин (минимум 3 символа)" required="" name="USER_LOGIN" maxlength="255" value="">
-                                    </div>
-                                </div>
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-user-tie"></i></span>
-                                        <input type="text" class="form-control" placeholder="Имя" name="USER_NAME" maxlength="255" value="">
-                                    </div>
-                                </div>
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-file-alt"></i></span>
-                                        <input type="text" class="form-control" placeholder="Фамилия" name="USER_LAST_NAME" maxlength="255" value="">
-                                    </div>
-                                </div>
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-phone-volume"></i></span>
-                                        <input type="tel" name="phone" class="form-control" placeholder="Ваш телефон">
-                                    </div>
-                                </div>
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-at"></i></span>
-                                        <input type="email" name="USER_EMAIL" maxlength="255" value="" class="form-control" placeholder="E-Mail" required="">
-                                    </div>
-                                </div>
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group input-group-mobile">
-                                        <div class="input-group-text">
-                                            <img src="https://smoservice.media/bitrix/tools/captcha.php?captcha_sid=0aa7ae29ac8e0a94e936c9c55b10936c" class="img-fluid" alt="CAPTCHA">
-                                        </div>
-                                        <input type="text" class="form-control" name="captcha_word" maxlength="50" value="" autocomplete="off" placeholder="Введите слово на картинке" required="">
-                                        <div class="input-group-text">
-                                            <a href="#!" title="Обновить картинку"><i class="fa-solid fa-arrows-rotate"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group mb-2">
-                                        <span class="input-group-text"><i class="fa-regular fa-unlock-alt"></i></span>
-                                        <input type="password" name="USER_PASSWORD" maxlength="255" value="" autocomplete="off" class="form-control" placeholder="Пароль" required="">
-                                    </div>
-                                    <small id="passwordHelp" class="form-text text-muted">
-                                        Пароль дожен иметь не менее 6 символов.
-                                    </small>
-                                </div>
-                                <!-- Item -->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-lock-alt"></i></span>
-                                        <input type="password" name="USER_CONFIRM_PASSWORD" maxlength="255" value="" autocomplete="off" class="form-control" placeholder="Подтверждение пароля" required="">
-                                    </div>
-                                </div>
-                                <!-- Information Alert -->
-                                <div class="bg-light rounding p-4">
-                                    Регистрируясь, вы принимаете <a href="/public-offer.php" target="_blank"><u>пользовательское соглашение</u></a> и соглашаетесь
-                                    с <a href="/rules.php" target="_blank"><u>правилами</u></a>.
-                                </div>
-                                <!-- Button -->
-                                <div class="mt-5 text-center">
-                                    <button type="submit" class="btn btn-primary mr-3">Зарегистрироваться</button>
-                                </div>
-                            </form>
+
+                            @livewire('auth.register')
+
                             <div class="d-flex align-items-center justify-content-center mt-4">
                                 <span class="text-muted">Есть аккаунт?</span>
-                                <a href="/login.php" class="ms-2">Авторизируйтесь</a>
+                                <a href="{{ route('login') }}" class="ms-2">Авторизируйтесь</a>
                             </div>
                         </div>
                     </div>

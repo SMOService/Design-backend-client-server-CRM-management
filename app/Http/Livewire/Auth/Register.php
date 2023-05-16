@@ -3,42 +3,78 @@
 namespace App\Http\Livewire\Auth;
 
 use App\Http\Controllers\Users\RegisterController;
+use App\Rules\PhoneNumber;
 use App\Services\Auth\UsersService;
 use App\Services\Client\Dto\RegisterUserRequestClientDto;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Fortify;
 use Livewire\Component;
 
-class Register extends Component
-{
+class Register extends Component {
 
+    public $login;
+    public $name;
+    public $surname;
+    public $phone;
+    public $captcha;
     public $email;
     public $password;
     public $password_confirmation;
 
-    protected $rules = [
-        'email'    => [
-            'required',
-            'string',
-            'email',
-            'max:255',
-            'unique:users',
-        ],
-        'password' => 'required|confirmed|string|min:8',
-    ];
+    public function rules() {
+        return [
+            'email'    => [
+                'required',
+                'string',
+                'email:strict',
+                'max:255',
+                'unique:users',
+            ],
+            'login'    => [
+                'required',
+                'string',
+                'max:255',
+                'unique:users,name',
+            ],
+            'name'     => [
+                'sometimes',
+                'nullable',
+                'string',
+                'min:3',
+                'max:50',
+            ],
+            'surname'  => [
+                'sometimes',
+                'nullable',
+                'string',
+                'min:3',
+                'max:50',
+            ],
+            'phone'    => [
+                'sometimes',
+                'nullable',
+                new PhoneNumber(),
+            ],
+            'password' => 'required|confirmed|string|min:8',
+        ];
+    }
 
-    public function render()
-    {
+    public function render() {
         return view('livewire.auth.register');
     }
 
-    public function register()
-    {
+    public function register() {
         $this->validate();
 
         $dto = (new RegisterUserRequestClientDto([
+            'name'   => $this->login,
             'email'    => $this->email,
             'password' => $this->password,
+            'profile'  => [
+                'name'    => $this->name,
+                'surname' => $this->surname,
+                'phone'   => $this->phone,
+            ],
         ]));
 
         try {

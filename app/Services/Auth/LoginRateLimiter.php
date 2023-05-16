@@ -43,6 +43,6 @@ class LoginRateLimiter
 
     protected function throttleKey(LoginUserRequestClientDto $dto): string
     {
-        return Str::transliterate(Str::lower($dto->email.'|'.$dto->ip));
+        return Str::transliterate(Str::lower($dto->login.'|'.$dto->ip));
     }
 }

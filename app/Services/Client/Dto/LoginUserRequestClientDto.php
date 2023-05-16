@@ -7,7 +7,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 class LoginUserRequestClientDto extends DataTransferObject
 {
 
-    public string $email;
+    public string $login;
 
     public string $password;
 

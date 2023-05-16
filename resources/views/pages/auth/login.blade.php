@@ -29,36 +29,12 @@
                                 <hr>
                                 <span class="line-text">или</span>
                             </div>
-                            <form method="post" action="">
-                                <!--item-->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-user-tie"></i></span>
-                                        <input type="text" class="form-control" placeholder="Логин или Email">
-                                    </div>
-                                </div>
-                                <!--item-->
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fa-regular fa-unlock"></i></span>
-                                        <input type="password" class="form-control" placeholder="Пароль">
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="rememberMe">
-                                        <label class="form-check-label" for="rememberMe">Запомнить меня</label>
-                                    </div>
-                                    <a href="/forgot-password.php" class="ms-auto"><u>Забыли пароль?</u></a>
-                                </div>
-                                <!-- Button -->
-                                <div class="text-center mt-5">
-                                    <button type="submit" class="btn btn-primary">Войти на сайт</button>
-                                </div>
-                            </form>
+
+                            @livewire('auth.login')
+
                             <div class="d-flex align-items-center justify-content-center mt-4">
                                 <span class="text-muted">Ещё нет аккаунта?</span>
-                                <a href="/register.php" class="ms-2">Зарегистрируйтесь</a>
+                                <a href="{{ route('register') }}" class="ms-2">Зарегистрируйтесь</a>
                             </div>
                         </div>
                     </div>

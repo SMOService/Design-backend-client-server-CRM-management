@@ -17,5 +17,6 @@ class RegisterUserRequestDto extends DataTransferObject
 
     public string $password;
 
+    public array $profile;
 }
 

@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <title>@yield('meta_title', 'SMM продвижение в социальных сетях – Система раскрутки SMOService')</title>
-      <meta name="keywords"
+    <meta name="keywords"
           content="@yield('meta_keywords',  'смосервис, накрутка, раскрутка, продвижение, смм, сервис, сайт, система, онлайн, соцсети, услуги, просмотры, подписчики, лайки, зрители, комментарии, реклама, топ, тренды')"/>
     <meta name="description"
           content="@yield('meta_description', 'Онлайн сервис продвижения и раскрутки социальных сетей. Подписчики, просмотры, комментарии и лайки в социальных сетях по низким ценам.')"/>
@@ -19,18 +19,18 @@
     <meta property="og:site_name" content="{{ config('app.name') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="robots" content="index, follow" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="robots" content="index, follow"/>
     <meta name="color-scheme" content="dark light">
     <!-- Favicon -->
-    <link rel="canonical" href="" />
+    <link rel="canonical" href=""/>
     <!-- OG Tags -->
     <meta property="og:title" content="SMM продвижение в социальных сетях – Система раскрутки SMOService">
     <meta property="og:description"
           content="Онлайн сервис продвижения и раскрутки социальных сетей. Подписчики, просмотры, комментарии и лайки в социальных сетях по низким ценам.">
     <meta property="og:image" content="https://smoservice.media/assets/img/ogimgwebsite.jpeg">
-    <meta name="trustpilot-one-time-domain-verification-id" content="8d6d6bcf-323a-4ea7-b3fc-ee7f4973f8c3" />
-    <meta name="p:domain_verify" content="a2c85e125bb83b85810700b406e4f7b6" />
+    <meta name="trustpilot-one-time-domain-verification-id" content="8d6d6bcf-323a-4ea7-b3fc-ee7f4973f8c3"/>
+    <meta name="p:domain_verify" content="a2c85e125bb83b85810700b406e4f7b6"/>
 
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -82,9 +82,31 @@
                             </div>
                         </form>
 
-                        <a href=" {{ route('login') }}" class="btn btn-light ms-auto me-2">
-                            <i class="fa-regular fa-right-to-bracket fs-24"></i>
-                        </a>
+                        @if (\Auth::user())
+                            <div class="dropdown ms-auto">
+                                <a class="btn border d-flex align-items-center" href="#!" data-bs-toggle="dropdown"><i
+                                        class="fa-regular fa-circle-user fs-24"></i></a>
+                                <div class="dropdown-menu" style="margin-top: 14px; left: -120px">
+                                    <a href="{{ route('personal.index') }}" class="dropdown-item"><i
+                                            class="fa-regular fa-user-tie me-3"></i>Личный
+                                        кабинет</a>
+                                    <a href="/balance.php" class="dropdown-item"><i
+                                            class="fa-regular fa-wallet me-3"></i>Пополнить
+                                        баланс</a>
+                                    <a href="/orders.php" class="dropdown-item"><i class="fa-solid fa-list-check me-3"></i>Мои
+                                        заказы</a>
+                                    <a href="/support.php" class="dropdown-item"><i class="fa-regular fa-headset me-3"></i>Служба
+                                        поддержки</a>
+                                    <a href="{{ route('logout') }}" class="dropdown-item"><i
+                                            class="fa-regular fa-right-from-bracket me-3"></i>Выйти</a>
+                                </div>
+                            </div>
+
+                        @else
+                            <a href=" {{ route('login') }}" class="btn btn-light ms-auto me-2">
+                                <i class="fa-regular fa-right-to-bracket fs-24"></i>
+                            </a>
+                        @endif
 
                         <button class="btn btn-light navbar-toggler ms-2" id="hamburger_menu_button" type="button"
                                 data-bs-toggle="collapse" data-bs-target="#navbarHeaderContent"
@@ -239,19 +261,47 @@
                             </div>
                         </form>
 
-                        <div class="dropdown d-none d-lg-block ms-auto">
-                            <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Войти <i class="fa-regular fa-angle-down ms-2"></i>
-                            </button>
-                            <ul class="dropdown-menu animate slideIn mt-3 p-2">
-                                <li><a class="dropdown-item" href="{{ route('login') }}"><i
-                                            class="fa-regular fa-address-card me-2"></i>Авторизация</a></li>
-                                <li><a class="dropdown-item" href="{{ route('register') }}"><i
-                                            class="fa-regular fa-right-to-bracket me-2"></i>Регистрация</a></li>
+                        @if (\Auth::user())
+                            <ul class="d-none d-lg-flex align-items-center fs-16">
+                                <li class="me-2">
+                                    <a href="/balance.php" class="btn d-flex align-items-center"><i
+                                            class="fa-regular fa-wallet fs-18 me-2"></i>0 руб.</a>
+                                </li>
+                                <li class="dropdown">
+                                    <a class="btn border dropdown-toggle d-flex align-items-center" href="#!"
+                                       data-bs-toggle="dropdown">
+                                        <i class="far fa-user-circle fs-18 me-2"></i>{{ \Auth::user()->name ?? \Auth::user()->email }}
+                                    </a>
+                                    <div class="dropdown-menu animate slideIn mt-3 p-2">
+                                        <a href="/personal.php" class="dropdown-item"><i
+                                                class="fa-regular fa-user-tie me-3"></i>Личный кабинет</a>
+                                        <a href="/balance.php" class="dropdown-item"><i
+                                                class="fa-regular fa-wallet me-3"></i>Пополнить баланс</a>
+                                        <a href="/orders.php" class="dropdown-item"><i class="fa-solid fa-list-check me-3"></i>Мои
+                                            заказы</a>
+                                        <a href="/support.php" class="dropdown-item"><i
+                                                class="fa-regular fa-headset me-3"></i>Служба
+                                            поддержки</a>
+                                        <a href="{{ route('logout') }}" class="dropdown-item"><i
+                                                class="fa-regular fa-right-from-bracket me-3"></i>Выйти</a>
+                                    </div>
+                                </li>
                             </ul>
-                        </div>
+                        @else
+                            <div class="dropdown d-none d-lg-block ms-auto">
+                                <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Войти <i class="fa-regular fa-angle-down ms-2"></i>
+                                </button>
+                                <ul class="dropdown-menu animate slideIn mt-3 p-2">
+                                    <li><a class="dropdown-item" href="{{ route('login') }}"><i
+                                                class="fa-regular fa-address-card me-2"></i>Авторизация</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('register') }}"><i
+                                                class="fa-regular fa-right-to-bracket me-2"></i>Регистрация</a></li>
+                                </ul>
+                            </div>
+                        @endif
 
-                            <!--Theme Mode Mobile Toggler-->
+                        <!--Theme Mode Mobile Toggler-->
                         <button class="btn btn-light btn-change-theme ms-2 mt-4 mt-lg-0"
                                 style="min-width: 46px; height: 46px;">
                             <div class="dark-mode-icon"><i class="fa-solid fa-moon fs-18"
@@ -378,7 +428,8 @@
                 <ul class="list-unstyled mb-4">
                     <li class="mb-3 fs-16"><span class="fw-medium">utm_source</span> — название рекламной площадки</li>
                     <li class="bg-light rounding p-3"><span class="fw-medium">Зачем нужен:</span> Чтобы указать название
-                        источника трафика</li>
+                        источника трафика
+                    </li>
                 </ul>
                 <div class="fs-16 fw-medium mb-3">Примеры:</div>
                 <ul class="list-unstyled mb-0">
@@ -584,17 +635,20 @@
                         <li class="nav-item col-12 col-sm-6 col-md-4" role="presentation">
                             <button class="nav-link fw-medium fs-16 active" id="pills-cards-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-cards" type="button" role="tab" aria-controls="pills-cards"
-                                    aria-selected="true"><i class="fa-regular fa-credit-card me-2"></i>Карты</button>
+                                    aria-selected="true"><i class="fa-regular fa-credit-card me-2"></i>Карты
+                            </button>
                         </li>
                         <li class="nav-item col-12 col-sm-6 col-md-4 mt-3 mt-sm-0" role="presentation">
                             <button class="nav-link fw-medium fs-16" id="pills-ewallets-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-ewallets" type="button" role="tab" aria-controls="pills-ewallets"
-                                    aria-selected="false"><i class="fa-brands fa-paypal me-2"></i>Е-кошельки</button>
+                                    aria-selected="false"><i class="fa-brands fa-paypal me-2"></i>Е-кошельки
+                            </button>
                         </li>
                         <li class="nav-item col-12 col-md-4 mt-3 mt-md-0" role="presentation">
                             <button class="nav-link fw-medium fs-16" id="pills-crypto-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-crypto" type="button" role="tab" aria-controls="pills-crypto"
-                                    aria-selected="false"><i class="fa-solid fa-bitcoin-sign me-2"></i>Криптовалюты</button>
+                                    aria-selected="false"><i class="fa-solid fa-bitcoin-sign me-2"></i>Криптовалюты
+                            </button>
                         </li>
                     </ul>
                     <div class="tab-content" id="pills-tabContent">

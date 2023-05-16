@@ -11,39 +11,42 @@ use App\Services\Client\Dto\RegisterUserRequestClientDto;
 use App\Services\Server\BaseApiService;
 use App\Services\Server\Dto\Requests\RegisterUserRequestDto;
 use Illuminate\Routing\Pipeline;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Throwable;
 
-class UsersService
-{
+class UsersService {
 
-    public function auth(LoginUserRequestClientDto $dto)
-    {
+    public function auth(LoginUserRequestClientDto $dto) {
+
         return $this->loginPipeline($dto)->then(function ($dto) {
             return response()->json([
-                'user_id'      => \Auth::user()->id,
-                'access_token' =>  \Auth::user()->createToken('auth_token')->plainTextToken,
+                'user_id'      => Auth::user()->id,
+                'access_token' => Auth::user()->createToken('auth_token')->plainTextToken,
                 'token_type'   => 'Bearer',
             ]);
-        });
+        }) ?? null;
     }
+
     public function registerUser(RegisterUserRequestClientDto $dto): void {
         try {
-            if (User::query()->where(['email'=>$dto->email])->exists()) {
+            if (User::query()->where(['email' => $dto->email])->exists()) {
                 throw new \RuntimeException(__('auth.user_exists'));
             }
 
             DB::transaction(function () use ($dto) {
                 $user = new User();
-                $user->name = $dto->email;
+                $user->name = $dto->name;
                 $user->email = $dto->email;
                 $user->password = Hash::make($dto->password);
 
                 $user->save();
 
+                $registerUserRequestDto = $user->makeVisible('password')->toArray();
+                $registerUserRequestDto['profile'] = $dto->profile;
                 try {
-                    $dto = (new RegisterUserRequestDto($user->makeVisible('password')->toArray()));
+                    $dto = (new RegisterUserRequestDto($registerUserRequestDto));
                     $serverUser = app(BaseApiService::class)->registerUser($dto);
                 } catch (Throwable $e) {
                     throw new \RuntimeException($e->getMessage());
@@ -61,8 +64,7 @@ class UsersService
         }
     }
 
-    protected function loginPipeline(LoginUserRequestClientDto $dto)
-    {
+    protected function loginPipeline(LoginUserRequestClientDto $dto): Pipeline {
 
         return (new Pipeline(app()))->send($dto)->through(array_filter([
             EnsureLoginIsNotThrottled::class,
