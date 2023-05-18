@@ -8,12 +8,12 @@ import '../sass/global.scss'
 
 import ClipboardJS from "clipboard";
 
-import {createPopper} from '@popperjs/core';
+import * as Popper from '@popperjs/core'
+window.Popper = Popper
 
 import jQuery from 'jquery';
 
 window.$ = jQuery;
-
 import * as bootstrap from 'bootstrap'
 
 window.bootstrap = bootstrap;
@@ -25,6 +25,7 @@ const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]
 let count = 0;
 
 $(document).ready(function () {
+
     $(".nav-link").click(function () {
         $('.category-slider').slick('refresh');
     });
@@ -223,3 +224,119 @@ function displayCount() {
     $('#count-post, #count-post-2').text(count);
 }
 
+$(document).ready(function () {
+    $('.influencer-slider').slick({
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        centerMode: true,
+        responsive: [{
+            breakpoint: 1500,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1,
+                infinite: true,
+                dots: true,
+                centerMode: false
+            }
+        },
+
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: true,
+                    centerMode: false
+                }
+            }
+        ]
+    });
+
+    $(".dropdown-item").hover(function () {
+        $(this).tab('show');
+    });
+
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(
+        tooltipTriggerEl));
+
+    const btn = document.querySelector(".btn-change-theme, .btn-change-theme--mobile");
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+    btn.addEventListener("click", function () {
+        if (prefersDarkScheme.matches) {
+            document.body.classList.toggle("light-mode");
+            var theme = document.body.classList.contains("light-mode") ? "light" : "dark";
+        } else {
+            document.body.classList.toggle("dark-mode");
+            var theme = document.body.classList.contains("dark-mode") ? "dark" : "light";
+        }
+        document.cookie = "theme=" + theme;
+    });
+
+
+    const anchors = document.querySelectorAll('a.link-scroll')
+
+    for (let anchor of anchors) {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault()
+
+            const blockID = anchor.getAttribute('href').substr(1)
+
+            document.getElementById(blockID).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
+        })
+    }
+
+    var count = 0;
+    $(function () {
+        count = $('input[type=checkbox]:checked').length;
+        displayCount();
+
+        $('input[type=checkbox]').bind('click', function (e, a) {
+            if (this.checked) {
+                count += a ? -1 : 1;
+            } else {
+                count += a ? 1 : -1;
+            }
+            displayCount();
+        });
+        $('#count-post__reset').click(function (e) {
+            $('#count-post, #count-post-2').text(0);
+            $('input[type=checkbox]').removeAttr("checked");
+            count = 0;
+        });
+    });
+
+    function displayCount() {
+        $('#count-post, #count-post-2').text(count);
+    }
+
+    // Gets the video src from the data-src on each button
+
+    var $videoSrc;
+    $('.ucard-video').click(function () {
+        $videoSrc = $(this).data("src");
+    });
+    console.log($videoSrc);
+    // when the modal is opened autoplay it
+    $('#videoModal').on('shown.bs.modal', function (e) {
+
+        // set the video src to autoplay and not to show related video. Youtube related video is like a box of chocolates... you never know what you're gonna get
+        $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
+
+    })
+
+    // stop playing the youtube video when I close the modal
+    $('#videoModal').on('hide.bs.modal', function (e) {
+        // a poor man's stop video
+        $("#video").attr('src', $videoSrc);
+    })
+    // document ready
+});
