@@ -40,7 +40,6 @@
                                     @endphp
                                     @for($i=0;$i<5;$i++)
                                         @if ($subCategories->get($i)['name'] ?? null)
-
                                             <li class="col-6">
                                                 <a href="{{ route('subcategory', ['category'=>$category['slug'], 'subcategory'=>$subCategories->get($i)['slug']]) }}" class="">
                                                     <i class="fa-regular {{$subCategories->get($i)['attributes']['category_icon']['value'] ?? null}} me-2 text-center" style="width:16px;"></i>

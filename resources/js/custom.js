@@ -20,6 +20,22 @@ window.bootstrap = bootstrap;
 
 import slick from 'slick-carousel'
 
+
+/* new code */
+
+const triggerTabList = [].slice.call(document.querySelectorAll('.dropdown-item'));
+triggerTabList.forEach(function (triggerEl) {
+    const tabTrigger = new bootstrap.Tab(triggerEl);
+
+    triggerEl.addEventListener('mouseover', function (event) {
+        event.preventDefault()
+        tabTrigger.show()
+    })
+})
+
+
+/* old code */
+
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 
 let count = 0;
@@ -256,9 +272,6 @@ $(document).ready(function () {
         ]
     });
 
-    $(".dropdown-item").hover(function () {
-        $(this).tab('show');
-    });
 
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(
