@@ -25,11 +25,17 @@ class IndexController extends Controller
 
         $category = $categories->where('slug', $subcategory)->firstOrFail();
 
-        return view('pages.sub_category', [
+        if ($category['parent'] ?? null) {
+            $category['parentCategory'] = $categories->where('id', $category['parent'])->first();
+        }
+
+        $data =  [
             'products'        => app(ProductService::class)->list($category),
             'currentCategory' => $category,
             'categories'      => app(CategoryService::class)->list(),
-        ]);
+        ];
+
+        return view('pages.sub_category', $data);
 
     }
 }
