@@ -10,6 +10,7 @@ use App\Services\Client\Dto\LoginUserRequestClientDto;
 use App\Services\Client\Dto\RegisterUserRequestClientDto;
 use App\Services\Server\BaseApiService;
 use App\Services\Server\Dto\Requests\RegisterUserRequestDto;
+use App\Services\Server\UserService;
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

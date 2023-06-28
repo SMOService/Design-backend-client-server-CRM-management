@@ -55,7 +55,7 @@
                                  </span>
                     <span class="ms-auto fw-medium">{{ $price }}₽</span>
                 </div>
-                <button class="btn btn-lg btn-primary w-100">Оформить заказ</button>
+                <button class="btn btn-lg btn-primary w-100" wire:click="submit">Оформить заказ</button>
             </div>
             <div class="col-lg-5 h-100">
                 <div class="p-3 bg-light rounding position-sticky">

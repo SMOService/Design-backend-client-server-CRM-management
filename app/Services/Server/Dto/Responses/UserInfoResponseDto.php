@@ -14,5 +14,7 @@ class UserInfoResponseDto extends DataTransferObject
     public string $email;
 
     public int $status;
+
+    public float $balance;
 }
 

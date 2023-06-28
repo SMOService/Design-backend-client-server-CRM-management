@@ -41,6 +41,13 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         ->middleware(['guest:' . config('fortify.guard')])
         ->name('register');
 
+    Route::get('/forgot', [AuthController::class, 'forgot'])
+        ->middleware(['guest:' . config('fortify.guard')])
+        ->name('forgot');
+
+    Route::get('/reset-password/{token}', [AuthController::class, 'resetPassword'])
+        ->middleware(['guest:' . config('fortify.guard')])
+        ->name('password.reset');
 
     $limiter             = config('fortify.limiters.login');
     $twoFactorLimiter    = config('fortify.limiters.two-factor');
@@ -52,23 +59,23 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
 
     // Password Reset...
     if (Features::enabled(Features::resetPasswords())) {
-        if ($enableViews) {
-            Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
-                ->middleware(['guest:' . config('fortify.guard')])
-                ->name('password.request');
-
-            Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
-                ->middleware(['guest:' . config('fortify.guard')])
-                ->name('password.reset');
-        }
-
-        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-            ->middleware(['guest:' . config('fortify.guard')])
-            ->name('password.email');
-
-        Route::post('/reset-password', [NewPasswordController::class, 'store'])
-            ->middleware(['guest:' . config('fortify.guard')])
-            ->name('password.update');
+//        if ($enableViews) {
+//            Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+//                ->middleware(['guest:' . config('fortify.guard')])
+//                ->name('password.request');
+//
+//            Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+//                ->middleware(['guest:' . config('fortify.guard')])
+//                ->name('password.reset');
+//        }
+//
+//        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+//            ->middleware(['guest:' . config('fortify.guard')])
+//            ->name('password.email');
+//
+//        Route::post('/reset-password', [NewPasswordController::class, 'store'])
+//            ->middleware(['guest:' . config('fortify.guard')])
+//            ->name('password.update');
     }
 
     // Registration...
@@ -181,11 +188,17 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('/orders', [CabinetController::class, 'orders'])->name('orders');
+    Route::group(['prefix' => 'personal'], function () {
+        Route::get('/', function () {
+            return view('pages.cabinet.personal.index');
+        })->name('personal.index');
 
-    Route::get('/personal', function () {
-        return view('pages.cabinet.personal.index');
-    })->name('personal.index');
+        Route::get('/orders', [CabinetController::class, 'orders'])->name('personal.orders');
+        Route::get('/balance', [CabinetController::class, 'balance'])->name('personal.balance');
+        Route::get('/profile', [CabinetController::class, 'orders'])->name('personal.profile');
+    });
+
+
 
     Route::get('/support', function () {
         return view('pages.cabinet.support.index');

@@ -10,7 +10,12 @@ class CabinetController
 
     public function orders()
     {
-        return view('pages.cabinet.orders');
+        return view('pages.cabinet.personal.orders');
+    }
+
+    public function balance()
+    {
+        return view('pages.cabinet.personal.balance');
     }
 
     /**

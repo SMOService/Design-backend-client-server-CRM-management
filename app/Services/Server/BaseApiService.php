@@ -3,9 +3,11 @@
 namespace App\Services\Server;
 
 use App\Models\User;
+use App\Services\Server\Dto\Requests\BalanceOrderRequestDto;
 use App\Services\Server\Dto\Requests\CreateOrderRequestDto;
 use App\Services\Server\Dto\Requests\ListOrdersRequestDto;
 use App\Services\Server\Dto\Requests\RegisterUserRequestDto;
+use App\Services\Server\Dto\Responses\BalanceOrderResponseDto;
 use App\Services\Server\Dto\Responses\CreateOrderResponseDto;
 use App\Services\Server\Dto\Responses\RegisterUserResponseDto;
 use App\Services\Server\Dto\Responses\UserInfoResponseDto;
@@ -54,9 +56,16 @@ class BaseApiService
      * @throws \App\Services\Server\Exceptions\UnexpectedResponseException
      * @throws \App\Services\Server\Exceptions\ErrorResponseException
      */
-    public function categories(): Collection
+    public function categories($categoryId = null): Collection
     {
-        $response = $this->request(url: 'categories', method: 'GET');
+
+        $url = 'categories';
+
+        if ($categoryId ?? null) {
+            $url = 'categories/'.$categoryId;
+        }
+
+        $response = $this->request(url: $url, method: 'GET');
 
         $categories = new Collection();
         foreach ($response['data'] as $category) {
@@ -142,6 +151,24 @@ class BaseApiService
     }
 
     /**
+     * @throws UnknownProperties
+     * @throws UnexpectedResponseException
+     * @throws ErrorResponseException
+     */
+    public function createBalanceOrder(BalanceOrderRequestDto $dto): BalanceOrderResponseDto
+    {
+        $this->setUser($dto->user);
+
+        if ($this->user === null) {
+            throw new UnauthenticatedResponseException();
+        }
+
+        $response = $this->request('orders/create/balance', $dto->toArray());
+
+        return (new BalanceOrderResponseDto($response['data']));
+    }
+
+    /**
      * @throws \App\Services\Server\Exceptions\UnexpectedResponseException
      * @throws \App\Services\Server\Exceptions\ErrorResponseException
      * @throws \Spatie\DataTransferObject\Exceptions\UnknownProperties
@@ -168,7 +195,7 @@ class BaseApiService
 
         $response = $this->request(url: 'me', method: 'GET');
 
-        return (new UserInfoResponseDto($response));
+        return (new UserInfoResponseDto($response['data']));
     }
 
 

@@ -90,12 +90,12 @@
                                     <a href="{{ route('personal.index') }}" class="dropdown-item"><i
                                             class="fa-regular fa-user-tie me-3"></i>Личный
                                         кабинет</a>
-                                    <a href="/balance.php" class="dropdown-item"><i
+                                    <a href="{{ route('personal.balance') }}" class="dropdown-item"><i
                                             class="fa-regular fa-wallet me-3"></i>Пополнить
                                         баланс</a>
-                                    <a href="/orders.php" class="dropdown-item"><i class="fa-solid fa-list-check me-3"></i>Мои
+                                    <a href="{{ route('personal.orders') }}" class="dropdown-item"><i class="fa-solid fa-list-check me-3"></i>Мои
                                         заказы</a>
-                                    <a href="/support.php" class="dropdown-item"><i class="fa-regular fa-headset me-3"></i>Служба
+                                    <a href="{{ route('support') }}" class="dropdown-item"><i class="fa-regular fa-headset me-3"></i>Служба
                                         поддержки</a>
                                     <a href="{{ route('logout') }}" class="dropdown-item"><i
                                             class="fa-regular fa-right-from-bracket me-3"></i>Выйти</a>
@@ -150,8 +150,8 @@
                         @if (\Auth::user())
                             <ul class="d-none d-lg-flex align-items-center fs-16">
                                 <li class="me-2">
-                                    <a href="/balance.php" class="btn d-flex align-items-center"><i
-                                            class="fa-regular fa-wallet fs-18 me-2"></i>0 руб.</a>
+                                    <a href="{{ route('personal.balance') }}" class="btn d-flex align-items-center"><i
+                                            class="fa-regular fa-wallet fs-18 me-2"></i>{{ Auth::user()->userInfo->balance }} руб.</a>
                                 </li>
                                 <li class="dropdown">
                                     <a class="btn border dropdown-toggle d-flex align-items-center" href="#!"
@@ -159,13 +159,13 @@
                                         <i class="far fa-user-circle fs-18 me-2"></i>{{ \Auth::user()->name ?? \Auth::user()->email }}
                                     </a>
                                     <div class="dropdown-menu animate slideIn mt-3 p-2">
-                                        <a href="/personal.php" class="dropdown-item"><i
+                                        <a href="{{ route('personal.index') }}" class="dropdown-item"><i
                                                 class="fa-regular fa-user-tie me-3"></i>Личный кабинет</a>
-                                        <a href="/balance.php" class="dropdown-item"><i
+                                        <a href="{{ route('personal.balance') }}" class="dropdown-item"><i
                                                 class="fa-regular fa-wallet me-3"></i>Пополнить баланс</a>
-                                        <a href="/orders.php" class="dropdown-item"><i class="fa-solid fa-list-check me-3"></i>Мои
+                                        <a href="{{ route('personal.orders') }}" class="dropdown-item"><i class="fa-solid fa-list-check me-3"></i>Мои
                                             заказы</a>
-                                        <a href="/support.php" class="dropdown-item"><i
+                                        <a href="{{ route('support') }}" class="dropdown-item"><i
                                                 class="fa-regular fa-headset me-3"></i>Служба
                                             поддержки</a>
                                         <a href="{{ route('logout') }}" class="dropdown-item"><i

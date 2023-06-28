@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Server;
+use App\Services\Server\Dto\Requests\BalanceOrderRequestDto;
 use App\Services\Server\Dto\Requests\CreateOrderRequestDto;
 use App\Services\Server\Dto\Requests\ListOrdersRequestDto;
 
@@ -25,6 +26,17 @@ class OrderService
 
         try {
             $orderData = (new BaseApiService())->createOrder($dto);
+        } catch (\Throwable $e) {
+            throw new \Exception($e->getMessage()); //todo fix
+        }
+
+        return $orderData;
+    }
+
+    public function createBalanceOrder(BalanceOrderRequestDto $dto)
+    {
+        try {
+            $orderData = (new BaseApiService())->createBalanceOrder($dto);
         } catch (\Throwable $e) {
             throw new \Exception($e->getMessage()); //todo fix
         }

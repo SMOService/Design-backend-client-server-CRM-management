@@ -90,6 +90,23 @@ class SubCategory extends Component {
         $this->updatePrice();
     }
 
+    public function submit()
+    {
+
+        $this->validate();
+
+        session([
+            'cart' => [
+                'product_id' => $this->currentProduct['id'],
+                'count' => $this->countProducts,
+                'url'=>$this->url,
+            ],
+        ]);
+
+        return redirect()->route('cart');
+
+    }
+
     private function updatePrice()
     {
         $this->price = round($this->currentProduct['prices']['price'] * $this->countProducts, 2);

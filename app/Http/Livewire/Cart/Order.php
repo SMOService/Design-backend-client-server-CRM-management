@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\Auth\UsersService;
 use App\Services\Client\Dto\LoginUserRequestClientDto;
 use App\Services\Client\Dto\RegisterUserRequestClientDto;
+use App\Services\Server\CategoryService;
 use App\Services\Server\Dto\Requests\CreateOrderRequestDto;
 use App\Services\Server\OrderService;
 use App\Services\Server\PaymentSystemService;
@@ -30,13 +31,19 @@ class Order extends Component {
 
     public $paymentForm;
 
+    public $category;
+
+    public $price;
+
+    public $code;
+
     protected $rules = [
         'email'         => [
             'required',
             'email:strict',
         ],
-        'url'           => 'required|active_url',
-        'count'         => 'required|numeric',
+        //        'url'           => 'required|active_url',
+        //        'count'         => 'required|numeric',
         'paymentSystem' => 'required|numeric',
     ];
 
@@ -48,6 +55,8 @@ class Order extends Component {
             return false;
         }
 
+        $this->url = $this->cart['url'];
+
         $this->count = $this->cart['count'];
 
         $product = app(ProductService::class)->product($this->cart['product_id']);
@@ -56,9 +65,15 @@ class Order extends Component {
 
         $this->paymentSystems = app(PaymentSystemService::class)->list();
 
+        $this->paymentSystem = $this->paymentSystems[0]['id'];
+
         if (Auth::user()) {
             $this->email = Auth::user()->email;
         }
+
+        $this->category = app(CategoryService::class)->list($this->product['categories'][0]);
+
+        $this->price = round($this->product['prices']['price'] * $this->count, 2);
 
         return true;
 
@@ -66,6 +81,10 @@ class Order extends Component {
 
     public function updateCount($count) {
         $this->count = $count;
+    }
+
+    public function updateCode($value) {
+
     }
 
     public function render() {
@@ -91,13 +110,16 @@ class Order extends Component {
                 $password = Str::random(8);
                 $registerDto = (new RegisterUserRequestClientDto([
                     'email'    => $this->email,
+                    'name'     => $this->email,
                     'password' => $password,
+                    'profile' => [],
                 ]));
 
                 (new UsersService())->registerUser($registerDto);
 
 
                 $loginDto = (new LoginUserRequestClientDto([
+                    'login'    => $this->email,
                     'email'    => $this->email,
                     'password' => $password,
                     'remember' => false,
@@ -118,12 +140,12 @@ class Order extends Component {
         try {
 
             $orderDto = new CreateOrderRequestDto([
-                'items'=>[
-                    ['id'=>$this->cart['product_id'], 'count'=>$this->count],
+                'items'             => [
+                    ['id' => $this->cart['product_id'], 'count' => $this->count],
                 ],
-                'url'            => $this->url,
+                'url'               => $this->url,
                 'payment_system_id' => $this->paymentSystem,
-                'user'           => Auth::user(),
+                'user'              => Auth::user(),
             ]);
 
             $order = (new OrderService())->create($orderDto);
@@ -137,10 +159,11 @@ class Order extends Component {
 
         if ($order->paymentForm ?? null) {
             $this->paymentForm = $order->paymentForm;
+
             return true;
         }
 
-        $this->redirect(route('orders'));
+        $this->redirect(route('personal.orders'));
 
         return true;
     }

@@ -28,7 +28,7 @@
             <input type="checkbox" class="form-check-input" id="rememberMe" wire:model="remember">
             <label class="form-check-label" for="rememberMe">Запомнить меня</label>
         </div>
-        <a href="#" class="ms-auto"><u>Забыли пароль?</u></a>
+        <a href="{{ route('forgot') }}" class="ms-auto"><u>Забыли пароль?</u></a>
     </div>
     <!-- Button -->
     <div class="text-center mt-5">
