@@ -1,8 +1,6 @@
+# Design Backend Client Server CRM Management
 
-
-# SMM Backend Client CRM & Site Management
-
-Этот проект является системой управления отношениями с клиентами (CRM) и платформой для управления сайтами и SMM-кампаниями. Разработан на фреймворке Laravel.
+Этот проект представляет собой систему управления отношениями с клиентами (CRM) с дизайнерским подходом, разработанную на фреймворке Laravel.
 
 ## Содержание
 
@@ -17,7 +15,7 @@
 
 1. Клонируйте репозиторий из GitHub.
 ```bash
-git clone https://github.com/SitesReviews/SMM-backend-client-CRM-site-management.git
+git clone https://github.com/SitesReviews/Design-backend-client-server-CRM-management.git
 ```
 2. Установите зависимости Composer и NPM.
 ```bash
@@ -43,18 +41,18 @@ php artisan serve
 
 ## Структура проекта
 
+- `.github/`: Директория для конфигураций GitHub, включая настройки Dependabot.
 - `app/`: Основной код приложения.
 - `bootstrap/`: Файлы инициализации фреймворка.
 - `config/`: Конфигурационные файлы приложения.
 - `database/`: Файлы миграций базы данных и сиды.
 - `docker/`: Файлы для работы с Docker.
+- `lang/`: Директория для файлов локализации.
 - `public/`: Публичные файлы, такие как индексные файлы, CSS, JavaScript и изображения.
 - `resources/`: Виды (views), файлы стилей и JavaScript.
 - `routes/`: Файлы маршрутизации приложения.
 - `storage/`: Временные и лог-файлы.
 - `tests/`: Тестовые файлы.
-- `.github/`: Директория для конфигураций GitHub, включая настройки Dependabot.
-- `lang/`: Директория для файлов локализации.
 - `.editorconfig`: Файл конфигурации EditorConfig для поддержания согласованного стиля кодирования.
 - `.env.example`: Пример файла конфигурации для окружения.
 - `.gitattributes`: Файл Git для управления атрибутами файлов.
@@ -82,5 +80,5 @@ php artisan serve
 
 ## Контрибьюторы
 
-- [@yrdevel](https://github.com/yrdevel)
-- и [другие](https://github.com/SitesReviews/SMM-backend-client-CRM-site-management/graphs/contributors).
+- [Список контрибьюторов](https://github.com/SitesReviews/Design-backend-client-server-CRM-management/graphs/contributors).
+
