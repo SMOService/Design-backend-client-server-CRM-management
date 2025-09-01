@@ -18,6 +18,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class BaseApiService
@@ -51,45 +52,56 @@ class BaseApiService
         ]);
     }
 
+    /**
+     * Get pages with caching for better performance.
+     */
     public function pages($pageSlug = null)
     {
+        $cacheKey = 'api_pages_' . ($pageSlug ?: 'all');
+        
+        return Cache::remember($cacheKey, 300, function () use ($pageSlug) { // 5 minutes cache
+            $url = 'pages';
+            if ($pageSlug ?? null) {
+                $url = 'pages/'.$pageSlug;
+            }
 
-        $url = 'pages';
-        if ($pageSlug ?? null) {
-            $url = 'pages/'.$pageSlug;
-        }
+            $response = $this->request(url: $url, method: 'GET');
 
-        $response = $this->request(url: $url, method: 'GET');
+            $pages = new Collection();
+            foreach ($response['data'] as $page) {
+                $pages->add($page);
+            }
 
-        $pages = new Collection();
-        foreach ($response['data'] as $page) {
-            $pages->add($page);
-        }
-
-        return $pages;
+            return $pages;
+        });
     }
 
     /**
+     * Get categories with caching for better performance.
+     *
      * @throws \App\Services\Server\Exceptions\UnexpectedResponseException
      * @throws \App\Services\Server\Exceptions\ErrorResponseException
      */
     public function categories($categoryId = null): Collection
     {
+        $cacheKey = 'api_categories_' . ($categoryId ?: 'all');
+        
+        return Cache::remember($cacheKey, 600, function () use ($categoryId) { // 10 minutes cache
+            $url = 'categories';
 
-        $url = 'categories';
+            if ($categoryId ?? null) {
+                $url = 'categories/'.$categoryId;
+            }
 
-        if ($categoryId ?? null) {
-            $url = 'categories/'.$categoryId;
-        }
+            $response = $this->request(url: $url, method: 'GET');
 
-        $response = $this->request(url: $url, method: 'GET');
+            $categories = new Collection();
+            foreach ($response['data'] as $category) {
+                $categories->add($category);
+            }
 
-        $categories = new Collection();
-        foreach ($response['data'] as $category) {
-            $categories->add($category);
-        }
-
-        return $categories;
+            return $categories;
+        });
     }
 
     /**
