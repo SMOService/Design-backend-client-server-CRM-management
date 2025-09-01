@@ -11,21 +11,42 @@ use Illuminate\Http\Request;
 class OrderController extends Controller {
 
     public function addToBasket(AddToBasketRequest $request) {
-        session(['cart' => ['product_id' => $request->get('product_id'), 'count' => $request->get('count')]]);
+        $validated = $request->validated();
+        
+        // Store cart data securely with session regeneration for security
+        $request->session()->regenerate(true);
+        $request->session()->put('cart', [
+            'product_id' => $validated['product_id'], 
+            'count' => $validated['count'],
+            'added_at' => now()->toISOString(),
+        ]);
 
-        return redirect('cart');
+        return redirect('cart')->with('success', 'Product added to cart successfully.');
     }
 
     public function showCart(Request $request) {
         $cart = $request->session()->get('cart');
+        $product = null;
 
-        if ($cart ?? null) {
-            $product = app(ProductService::class)->product($cart['product_id']);
+        if ($cart && isset($cart['product_id'])) {
+            try {
+                $products = app(ProductService::class)->product($cart['product_id']);
+                $product = $products[0] ?? null;
+            } catch (\Exception $e) {
+                \Log::warning('Failed to fetch product for cart', [
+                    'product_id' => $cart['product_id'],
+                    'error' => $e->getMessage(),
+                ]);
+                
+                // Clear invalid cart data
+                $request->session()->forget('cart');
+                $cart = null;
+            }
         }
 
         return view('pages.cart', [
-            'product' => $product[0] ?? null,
-            'cart'    => $cart ?? null,
+            'product' => $product,
+            'cart'    => $cart,
         ]);
     }
 
