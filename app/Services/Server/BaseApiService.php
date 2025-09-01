@@ -29,8 +29,25 @@ class BaseApiService
 
     public function __construct()
     {
+        $baseUri = config('app.server_api_url');
+        
+        // Validate API URL is configured
+        if (empty($baseUri)) {
+            throw new \InvalidArgumentException('SERVER_API_URL must be configured');
+        }
+        
+        // Ensure HTTPS in production
+        if (app()->environment('production') && !str_starts_with($baseUri, 'https://')) {
+            throw new \InvalidArgumentException('SERVER_API_URL must use HTTPS in production');
+        }
+        
         $this->client = new Client([
-            'base_uri' => config('app.server_api_url'),
+            'base_uri' => $baseUri,
+            'timeout' => 30,
+            'verify' => config('app.server_api_verify_ssl', true),
+            'headers' => [
+                'User-Agent' => 'CRM-Client/1.0',
+            ],
         ]);
     }
 
@@ -214,9 +231,14 @@ class BaseApiService
 
     private function request($url, $data = [], $method = 'POST')
     {
+        // Validate API key is configured
+        $apiKey = config('app.server_api_key');
+        if (empty($apiKey)) {
+            throw new \InvalidArgumentException('SERVER_API_KEY must be configured');
+        }
 
         $headers = array_merge([
-            'X-Client-Token' => config('app.server_api_key'),
+            'X-Client-Token' => $apiKey,
             'Content-Type'   => 'application/json',
             'Accept'         => 'application/json',
         ], $this->headers);
@@ -242,26 +264,55 @@ class BaseApiService
         try {
             $response = $this->client->request($method, $url, $options);
         } catch (ClientException $e) {
-            $response = $e->getResponse()->getBody()->getContents();
-            $jsonBody = json_decode($response, true);
-            if ($e->getCode() === 404) {
+            $statusCode = $e->getCode();
+            $responseBody = $e->getResponse()->getBody()->getContents();
+            
+            // Log security-relevant errors
+            if (in_array($statusCode, [401, 403])) {
+                \Log::warning('API authentication/authorization error', [
+                    'url' => $url,
+                    'status' => $statusCode,
+                    'user_id' => $this->user?->id,
+                ]);
+            }
+            
+            if ($statusCode === 404) {
                 abort(404);
             }
-            throw new ErrorResponseException($jsonBody['message'], $e);
+            
+            $jsonBody = json_decode($responseBody, true);
+            $message = $jsonBody['message'] ?? 'API request failed';
+            
+            // Don't expose sensitive information in production
+            if (app()->environment('production')) {
+                $message = 'An error occurred while processing your request';
+            }
+            
+            throw new ErrorResponseException($message, $e);
         } catch (GuzzleException $e) {
+            \Log::error('API call error', [
+                'url' => $url,
+                'error' => $e->getMessage(),
+                'user_id' => $this->user?->id,
+            ]);
+            
             if ($e->getCode() === 500) {
                 abort(500, 'Server call error');
             }
-            throw new ErrorResponseException('Error API_CALL '.$e->getMessage(), $e);
+            
+            $message = app()->environment('production') 
+                ? 'Service temporarily unavailable' 
+                : 'Error API_CALL ' . $e->getMessage();
+                
+            throw new ErrorResponseException($message, $e);
         }
 
         $jsonBody = json_decode($response->getBody()->getContents(), true);
 
         if (!is_array($jsonBody)) {
-            throw new UnexpectedResponseException();
+            throw new UnexpectedResponseException('Invalid response format');
         }
 
         return $jsonBody;
-
     }
 }

@@ -186,6 +186,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'api.security', // Add security middleware
 ])->group(function () {
 
     Route::group(['prefix' => 'personal'], function () {
@@ -222,7 +223,9 @@ Route::get('/{category}', IndexController::class)->name('category');
 Route::get('/{category}/{subcategory}', [IndexController::class, 'products'])->name('subcategory');
 Route::get('/{category}/{subcategory}/{product}', IndexController::class)->name('product');
 
-Route::post('/addToBasket', [OrderController::class, 'addToBasket'])->name('addToBasket');
+Route::post('/addToBasket', [OrderController::class, 'addToBasket'])
+    ->name('addToBasket')
+    ->middleware(['api.security', 'throttle:10,1']); // Additional protection for cart operations
 
 
 //Route::get('/', function () {
