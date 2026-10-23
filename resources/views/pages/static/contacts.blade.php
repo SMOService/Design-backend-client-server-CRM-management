@@ -26,14 +26,6 @@
                                     <a href="{{ route('support') }}" class="btn btn-sm btn-light">Служба поддержки</a>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xl-4 mb-4">
-                                <div class="border rounding shadow--hover p-3 p-xl-4">
-                                    <i class="fa-light fa-handshake color-orange fs-30 mb-4"></i>
-                                    <div class="fs-16 fw-medium mb-2">Для партнеров</div>
-                                    <p class="mb-4 text-muted">support@smoservice.media</p>
-                                    <a href="mailto:support@smoservice.media" class="btn btn-sm btn-light">Сотрудничество</a>
-                                </div>
-                            </div>
                             <div class="col-lmd12 col-xl-4 mb-4">
                                 <div class="border rounding shadow--hover p-3 p-xl-4">
                                     <i class="fa-light fa-paper-plane color-orange fs-30 mb-4"></i>

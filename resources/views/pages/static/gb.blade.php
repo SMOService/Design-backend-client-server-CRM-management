@@ -113,7 +113,7 @@
                                     </div>
                                     <div class="comments__body ms-3 w-100">
                                         <div class="d-flex align-items-center mb-2">
-                                            <div class="fs-16 fw-medium">Aleksandrgalkin@Gmail.Com</div>
+                                            <div class="fs-16 fw-medium">Aleksandr G.</div>
                                             <span class="ms-auto color-yellow">
                					<i class="fas fa-star"></i>
                					<i class="fas fa-star"></i>

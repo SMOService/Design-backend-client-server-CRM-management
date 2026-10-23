@@ -43,7 +43,7 @@ class ContactUs extends Component {
     public function mount(SessionManager $session) {
 
         $this->url = 'https://yandex.ru';
-        $this->email = 'sd323c@sdc.ru';
+        $this->email = '';
         $this->cart = $session->get('cart');
 
         if ($this->cart === null) {
